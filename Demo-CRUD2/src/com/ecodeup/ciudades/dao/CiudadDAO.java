@@ -46,7 +46,7 @@ public class CiudadDAO {
 	// listar todos los productos
 	public List<Ciudad> listarCiudades() throws SQLException {
 
-		List<Ciudad> listaArticulos = new ArrayList<Ciudad>();
+		List<Ciudad> listaCiudades = new ArrayList<Ciudad>();
 		String sql = "SELECT * FROM Ciudad";
 		con.conectar();
 		connection = con.getJdbcConnection();
@@ -54,54 +54,47 @@ public class CiudadDAO {
 		ResultSet resulSet = statement.executeQuery(sql);
 
 		while (resulSet.next()) {
-			int id = resulSet.getInt("id");
-			String codigo = resulSet.getString("codigo");
-			String nombre = resulSet.getString("nombre");
-			String descripcion = resulSet.getString("descripcion");
-			Double existencia = resulSet.getDouble("existencia");
-			Double precio = resulSet.getDouble("precio");
-			Articulo articulo = new Articulo(id, codigo, nombre, descripcion, existencia, precio);
-			listaArticulos.add(articulo);
+			int id_ciudad = resulSet.getInt("id_ciudad");
+			int id_departamento_fk = resulSet.getInt("id_departamento_fk");
+			String nom_ciudad = resulSet.getString("nom_ciudad");
+			Ciudad ciudad = new Ciudad(id_ciudad,id_departamento_fk,nom_ciudad);
+			listaCiudades.add(ciudad);
 		}
 		con.desconectar();
-		return listaArticulos;
+		return listaCiudades;
 	}
 
 	// obtener por id
-	public Articulo obtenerPorId(int id) throws SQLException {
-		Articulo articulo = null;
+	public Ciudad obtenerPorId(int id_ciudad) throws SQLException {
+		Ciudad ciudad = null;
 
-		String sql = "SELECT * FROM articulos WHERE id= ? ";
+		String sql = "SELECT * FROM Ciudad WHERE id= ? ";
 		con.conectar();
 		connection = con.getJdbcConnection();
 		PreparedStatement statement = connection.prepareStatement(sql);
-		statement.setInt(1, id);
+		statement.setInt(1, id_ciudad);
 
 		ResultSet res = statement.executeQuery();
 		if (res.next()) {
-			articulo = new Articulo(res.getInt("id"), res.getString("codigo"), res.getString("nombre"),
-					res.getString("descripcion"), res.getDouble("existencia"), res.getDouble("precio"));
+			ciudad = new Ciudad(res.getInt("id_ciudad"), res.getInt("id_departamento_fk"), res.getString("nom_ciudad"));
 		}
 		res.close();
 		con.desconectar();
 
-		return articulo;
+		return ciudad;
 	}
 
 	// actualizar
-	public boolean actualizar(Articulo articulo) throws SQLException {
+	public boolean actualizar(Ciudad ciudad) throws SQLException {
 		boolean rowActualizar = false;
-		String sql = "UPDATE articulos SET codigo=?,nombre=?,descripcion=?,existencia=?, precio=? WHERE id=?";
+		String sql = "UPDATE Ciudad SET id_departamento_fk=?,nom_ciudad=? WHERE id_ciudad=?";
 		con.conectar();
 		connection = con.getJdbcConnection();
 		PreparedStatement statement = connection.prepareStatement(sql);
-		statement.setString(1, articulo.getCodigo());
-		statement.setString(2, articulo.getNombre());
-		statement.setString(3, articulo.getDescripcion());
-		statement.setDouble(4, articulo.getExistencia());
-		System.out.println(articulo.getPrecio());
-		statement.setDouble(5, articulo.getPrecio());
-		statement.setInt(6, articulo.getId());
+		statement.setInt(1, ciudad.getId_ciudad());
+		statement.setInt(2, ciudad.getId_departamento_fk());
+		statement.setString(3, ciudad.getNom_ciudad());
+		System.out.println(ciudad.getNom_ciudad());
 
 		rowActualizar = statement.executeUpdate() > 0;
 		statement.close();
@@ -110,13 +103,13 @@ public class CiudadDAO {
 	}
 	
 	//eliminar
-	public boolean eliminar(Articulo articulo) throws SQLException {
+	public boolean eliminar(Ciudad ciudad) throws SQLException {
 		boolean rowEliminar = false;
-		String sql = "DELETE FROM articulos WHERE ID=?";
+		String sql = "DELETE FROM Ciudad WHERE ID=?";
 		con.conectar();
 		connection = con.getJdbcConnection();
 		PreparedStatement statement = connection.prepareStatement(sql);
-		statement.setInt(1, articulo.getId());
+		statement.setInt(1, ciudad.getId_ciudad());
 
 		rowEliminar = statement.executeUpdate() > 0;
 		statement.close();
