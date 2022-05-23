@@ -3,7 +3,7 @@
   <display-name>CRUD Artículos con JSP y Servlet </display-name>
   <context-param>
     <param-name>jdbcURL</param-name>
-    <param-value>jdbc:mysql://localhost:3306/javaweb_crud</param-value>
+    <param-value>jdbc:mysql://localhost:3306/manejo_empleados</param-value>
   </context-param>
   <context-param>
     <param-name>jdbcUsername</param-name>
