@@ -1,3 +1,4 @@
+
 <%@page import="java.util.Iterator"%>
 <%@page import="com.ecodeup.ciudades.model.Ciudad"%>
 <%@page import="java.util.List"%>
@@ -11,42 +12,8 @@
 <title>Administrar Artículos</title>
 </head>
 <body>
-	<h1>Lista  Artículos</h1>
-	<% List <Ciudad> listaCiudades; %>
-<%
- try{
-	 listaCiudades=(List<Ciudad>) request.getAttribute("lista");
-    Iterator<Ciudad> item=listaCiudades.iterator();
-%>
-	<table>
-		<tr>
-			<td><a href="CiudadesServlet?action=index" >Ir al menú</a> </td>
-		</tr>
-	</table>
-	
-	<table border="1" width="100%">
-		<tr>
-		 <td> ID</td>
-		 <td> CODIGO</td>
-		 <td> NOMBRE</td>
-		 <td colspan=2>ACCIONES</td>
-		</tr>
-<% while(item.hasNext()){
-         Ciudad ciudad = item.next();
-         
-      %>
-       <tr>
-            <th><%= ciudad.getId_ciudad() %></th>
-            <th><%= ciudad.getId_departamento_fk()  %></th>
-            <th><%= ciudad.getNom_ciudad()  %></th>
-          </tr>
-          <%}
- }catch(Exception e){
-      e.printStackTrace();
- }
-%>
-		
-	</table>
+
+<%response.sendRedirect("CiudadesServlet?action=mostrar"); %>
 	
 </body>
 </html>

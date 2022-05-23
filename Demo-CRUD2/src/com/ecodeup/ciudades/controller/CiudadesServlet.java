@@ -2,6 +2,7 @@ package com.ecodeup.ciudades.controller;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -21,7 +22,7 @@ import com.ecodeup.ciudades.model.Ciudad;
 public class CiudadesServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	CiudadDAO ciudadDAO;
-
+	private List<Ciudad> listaCiudades=new ArrayList<>();
 	public void init() {
 		String jdbcURL = getServletContext().getInitParameter("jdbcURL");
 		String jdbcUsername = getServletContext().getInitParameter("jdbcUsername");
@@ -64,7 +65,10 @@ public class CiudadesServlet extends HttpServlet {
 				registrar(request, response);
 				break;
 			case "mostrar":
-				mostrar(request, response);
+				CiudadDAO ciudadDao= new CiudadDAO();
+				this.listaCiudades=ciudadDao.listarCiudades();
+				request.setAttribute("ciudad", listaCiudades);
+				request.getRequestDispatcher("vista/Ciudades.jsp").forward(request, response);
 				break;
 			case "showedit":
 				showEditar(request, response);
@@ -102,7 +106,7 @@ public class CiudadesServlet extends HttpServlet {
 	}
 
 	private void registrar(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
-		Ciudad ciudad = new Ciudad(Integer.parseInt(request.getParameter("id_ciudad")),Integer.parseInt(request.getParameter("id_documento_fk")), request.getParameter("nom_ciudad"));
+		Ciudad ciudad = new Ciudad(Integer.parseInt(request.getParameter("id_ciudad")), request.getParameter("nom_ciudad"));
 		ciudadDAO.insertar(ciudad);
 		
 		RequestDispatcher dispatcher = request.getRequestDispatcher("index.jsp");
@@ -116,9 +120,9 @@ public class CiudadesServlet extends HttpServlet {
 	
 	
 	private void mostrar(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException , ServletException{
-		RequestDispatcher dispatcher = request.getRequestDispatcher("/vista/mostrar.jsp");
+		RequestDispatcher dispatcher = request.getRequestDispatcher("vista/mostrar.jsp");
 		List<Ciudad> listaCiudades= ciudadDAO.listarCiudades();
-		request.setAttribute("lista", listaCiudades);
+		request.setAttribute("ciudad", listaCiudades);
 		dispatcher.forward(request, response);
 	}	
 	
@@ -131,7 +135,7 @@ public class CiudadesServlet extends HttpServlet {
 	}
 	
 	private void editar(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException{
-		Ciudad ciudad= new Ciudad(Integer.parseInt(request.getParameter("id_nombre")),Integer.parseInt(request.getParameter("id_departamento_fk")), request.getParameter("nom_ciudad"));
+		Ciudad ciudad= new Ciudad(Integer.parseInt(request.getParameter("id_nombre")), request.getParameter("nom_ciudad"));
 		ciudadDAO.actualizar(ciudad);
 		index(request, response);
 	}

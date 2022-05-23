@@ -16,15 +16,15 @@ import com.ecodeup.ciudades.model.Conexion;
  * @web: www.ecodeup.com
  */
 
-public class CiudadDAO {
-	private Conexion con;
+public class CiudadDAO extends Conexion {
+	private Connion con=this.conectar();
 	private Connection connection;
 
 	public CiudadDAO(String jdbcURL, String jdbcUsername, String jdbcPassword) throws SQLException {
 		System.out.println(jdbcURL);
 		con = new Conexion(jdbcURL, jdbcUsername, jdbcPassword);
 	}
-
+	public CiudadDAO(){}
 	// insertar artículo
 	public boolean insertar(Ciudad ciudad) throws SQLException {
 		String sql = "INSERT INTO Ciudad (id_ciudad,id_departamento_fk,nom_ciudad) VALUES (?, ?, ?)";
@@ -34,7 +34,7 @@ public class CiudadDAO {
 		PreparedStatement statement = connection.prepareStatement(sql);
 		statement.setString(1, null);
 		statement.setInt(2, ciudad.getId_ciudad());
-		statement.setInt(3, ciudad.getId_departamento_fk());
+
 		statement.setString(4, ciudad.getNom_ciudad());
 
 		boolean rowInserted = statement.executeUpdate() > 0;
@@ -54,10 +54,11 @@ public class CiudadDAO {
 		ResultSet resulSet = statement.executeQuery(sql);
 
 		while (resulSet.next()) {
-			int id_ciudad = resulSet.getInt("id_ciudad");
-			int id_departamento_fk = resulSet.getInt("id_departamento_fk");
-			String nom_ciudad = resulSet.getString("nom_ciudad");
-			Ciudad ciudad = new Ciudad(id_ciudad,id_departamento_fk,nom_ciudad);
+			int id_ciudad = resulSet.getInt("Id_Ciudad");
+			String nom_ciudad = resulSet.getString("Nom_Ciudad");
+			Ciudad ciudad = new Ciudad();
+			ciudad.setId_ciudad(id_ciudad);
+			ciudad.setNom_ciudad(nom_ciudad);
 			listaCiudades.add(ciudad);
 		}
 		con.desconectar();
@@ -76,7 +77,7 @@ public class CiudadDAO {
 
 		ResultSet res = statement.executeQuery();
 		if (res.next()) {
-			ciudad = new Ciudad(res.getInt("id_ciudad"), res.getInt("id_departamento_fk"), res.getString("nom_ciudad"));
+			ciudad = new Ciudad(res.getInt("id_ciudad"), res.getString("nom_ciudad"));
 		}
 		res.close();
 		con.desconectar();
@@ -92,7 +93,6 @@ public class CiudadDAO {
 		connection = con.getJdbcConnection();
 		PreparedStatement statement = connection.prepareStatement(sql);
 		statement.setInt(1, ciudad.getId_ciudad());
-		statement.setInt(2, ciudad.getId_departamento_fk());
 		statement.setString(3, ciudad.getNom_ciudad());
 		System.out.println(ciudad.getNom_ciudad());
 

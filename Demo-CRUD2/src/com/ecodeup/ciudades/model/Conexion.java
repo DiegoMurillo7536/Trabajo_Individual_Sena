@@ -7,9 +7,11 @@ import java.sql.SQLException;
 
 public class Conexion {
     private Connection jdbcConnection;
-    private String jdbcURL;
-    private String jdbcUsername;
-    private String jdbcPassword;
+    private String jdbcURL="jdbc:mysql://localhost/3306/manejo_empleado";
+    private String jdbcUsername="root";
+    private String jdbcPassword="";
+
+    		
     
     public Conexion(String jdbcURL, String jdbcUsername, String jdbcPassword) {
 		this.jdbcURL = jdbcURL;
